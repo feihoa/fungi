@@ -1,12 +1,26 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { Text, View } from 'react-native';
+import Navigation from '@/navigation/Navigation';
+import { SQLiteProvider } from 'expo-sqlite';
+
+async function initializeDatabase(db: { execAsync: (arg0: string) => any }) {
+  try {
+    await db.execAsync(`
+          PRAGMA journal_mode = WAL;
+          CREATE TABLE IF NOT EXISTS fungi (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            path TEXT NOT NULL,
+            predictions TEXT NOT NULL
+          );
+      `);
+  } catch (error) {
+    console.log('Ошибка инициализации : ', error);
+  }
+}
 
 export default function App() {
   return (
-    <View className="flex-1 items-center justify-center bg-red">
-      <Text>hg</Text>
-      <StatusBar style="auto" />
-    </View>
+    <SQLiteProvider databaseName="fungi.db" onInit={initializeDatabase}>
+      <Navigation />
+    </SQLiteProvider>
   );
 }

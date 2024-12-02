@@ -7,6 +7,7 @@ import Loader from '@/components/shared/Loader';
 import fungiData from '../../../../assets/fungs/fungs';
 import MushroomImage from '@/components/shared/MushroomImage';
 import { useSQLiteContext } from 'expo-sqlite';
+import { AppConstants } from '@/app.constants';
 
 type MushroomCardProps = NativeStackScreenProps<RootStackParamList, 'MushroomCard'>;
 
@@ -66,20 +67,24 @@ const MushroomCard: React.FC<MushroomCardProps> = ({ route }) => {
   };
 
   return (
-    <>
+    <View style={styles.wrapper}>
       <Image source={{ uri: mushroomPath }} style={styles.mainImage} />
+      <Text style={styles.predictionsTitle}>Результаты распознавания:</Text>
       <FlatList
         contentContainerStyle={styles.container}
         data={predictions}
         keyExtractor={(item, index) => `${item.id}-${index}`}
         renderItem={renderPredictionItem}
-        ListHeaderComponent={<Text style={styles.predictionsTitle}>Результаты распознавания:</Text>}
       />
-    </>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  wrapper: {
+    flex: 1,
+    backgroundColor: '#f9f9f9',
+  },
   loaderContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -89,6 +94,7 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     padding: 20,
+    paddingTop: 10,
     backgroundColor: '#f9f9f9',
   },
   mainImage: {
@@ -98,7 +104,7 @@ const styles = StyleSheet.create({
   predictionItem: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    marginVertical: 8,
+    marginVertical: 4,
     paddingVertical: 8,
     borderBottomWidth: 1,
     borderBottomColor: '#ddd',
@@ -112,7 +118,8 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     color: '#333',
-    marginBottom: 10,
+    marginTop: 10,
+    paddingHorizontal: 20,
   },
   predictionText: {
     fontSize: 16,

@@ -8,9 +8,14 @@ const Stack = createNativeStackNavigator();
 const Navigation: FC = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Navigator>
         {routes.map(route => (
-          <Stack.Screen key={route.name} name={route.name} component={route.component} />
+          <Stack.Screen
+            key={route.name}
+            name={route.name}
+            component={route.component}
+            options={{ title: route.title }}
+          />
         ))}
       </Stack.Navigator>
     </NavigationContainer>

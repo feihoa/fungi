@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Image, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { View, Image, TouchableOpacity, Text, StyleSheet, Dimensions } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '@/navigation/navigation.types';
 import { AppConstants } from '@/app.constants';
@@ -7,9 +7,15 @@ import { AppConstants } from '@/app.constants';
 type HomeScreenProps = NativeStackScreenProps<RootStackParamList, 'Home'>;
 
 const Home: React.FC<HomeScreenProps> = ({ navigation }) => {
+  const { width, height } = Dimensions.get('window');
+
   return (
     <View style={[styles.container, { backgroundColor: AppConstants.primary }]}>
-      <Image source={require('../../../../assets/images/fungi.png')} style={styles.image} />
+      <Image
+        source={require('../../../../assets/images/fungi.png')}
+        style={[styles.image, { width, height: height * 0.4 }]} // Адаптивное изображение
+        resizeMode="contain" // Изображение будет масштабироваться без обрезки
+      />
       <Text style={styles.title}>Добро пожаловать в Fungi!</Text>
       <TouchableOpacity
         style={[styles.button, styles.recognizeButton]}
@@ -39,8 +45,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   image: {
-    top: 0,
-    minWidth: '120%',
+    marginTop: 20,
   },
   title: {
     fontSize: 26,

@@ -6,6 +6,7 @@ import fungiData from '../../../../assets/fungs/fungs';
 import { useSQLiteContext } from 'expo-sqlite';
 import MushroomImage from '@/components/shared/MushroomImage';
 import AntDesign from '@expo/vector-icons/AntDesign';
+import { AppConstants } from '@/app.constants';
 
 type MushroomHistoryProps = NativeStackScreenProps<RootStackParamList, 'MushroomHistory'>;
 
@@ -98,7 +99,7 @@ const MushroomHistory: FC<MushroomHistoryProps> = ({ navigation }) => {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: AppConstants.primary }]}>
       <Text style={styles.title}>История распознаваний</Text>
       {groupedMushrooms.length > 0 && (
         <FlatList
@@ -129,8 +130,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     color: '#333',
-    marginBottom: 10,
-    marginTop: 30,
+    marginBottom: 20,
   },
   rowContainer: {
     flexDirection: 'row',
@@ -148,6 +148,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 8,
     padding: 10,
+    paddingRight: 0,
     marginRight: 10,
     alignSelf: 'stretch',
   },
@@ -165,7 +166,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     position: 'absolute',
     top: 20,
-    right: 30,
+    right: 20,
     padding: 4,
     borderRadius: 4,
     backgroundColor: '#f8d7da',

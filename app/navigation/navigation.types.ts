@@ -10,4 +10,5 @@ export type RootStackParamList = {
 export interface IRouter {
   name: keyof RootStackParamList;
   component: React.ComponentType<any>;
+  title: string;
 }

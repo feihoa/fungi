@@ -43,8 +43,8 @@ const styles = StyleSheet.create({
   },
   icon: {
     position: 'absolute',
-    top: 15,
-    left: 15,
+    top: 10,
+    left: 10,
     zIndex: 1,
     backgroundColor: 'white',
     opacity: 0.8,

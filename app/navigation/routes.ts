@@ -8,17 +8,21 @@ export const routes: IRouter[] = [
   {
     name: 'Home',
     component: Home,
+    title: 'Главная',
   },
   {
     name: 'Camera',
     component: Camera,
+    title: 'Камера',
   },
   {
     name: 'MushroomHistory',
     component: MushroomHistory,
+    title: 'История',
   },
   {
     name: 'MushroomCard',
     component: MushroomCard,
+    title: 'Результат',
   },
 ];

@@ -3,7 +3,7 @@ import { Text, View, Image, StyleSheet, FlatList } from 'react-native';
 import * as SQLite from 'expo-sqlite';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '@/navigation/navigation.types';
-import Loader from '@/components/ui/layout/Loader';
+import Loader from '@/components/shared/Loader';
 import fungiData from '../../../../assets/fungs/fungs';
 import MushroomImage from '@/components/shared/MushroomImage';
 import { useSQLiteContext } from 'expo-sqlite';
@@ -17,7 +17,7 @@ interface Prediction {
 
 const MushroomCard: React.FC<MushroomCardProps> = ({ route }) => {
   const { id } = route.params;
-  
+
   const db = useSQLiteContext();
 
   const [mushroomPath, setMushroomPath] = useState<any>(null);

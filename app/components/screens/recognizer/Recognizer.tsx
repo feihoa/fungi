@@ -203,6 +203,7 @@ const Recognizer: React.FC<CameraScreenProps> = ({ navigation }) => {
           <TouchableOpacity style={styles.saveButton} onPress={takePicture}>
             <Text style={styles.saveButtonText}>Распознать</Text>
           </TouchableOpacity>
+          <Text style={styles.tip}>Поместите гриб в центре кадра</Text>
         </CameraView>
       )}
       {load && <Loader />}
@@ -211,6 +212,16 @@ const Recognizer: React.FC<CameraScreenProps> = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  tip: {
+    position: 'absolute',
+    top: 30,
+    fontSize: 22,
+    textAlign: 'center',
+    width: '100%',
+    fontWeight: 500,
+    lineHeight: 26,
+    backgroundColor: 'white'
+  },
   centeredView: {
     flex: 1,
     justifyContent: 'center',

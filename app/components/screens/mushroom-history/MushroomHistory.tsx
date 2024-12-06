@@ -55,7 +55,7 @@ const MushroomHistory: FC<MushroomHistoryProps> = ({ navigation }) => {
     const predictionsData = JSON.parse(item.predictions);
 
     const firstPrediction = predictionsData[0];
-    const fungi = fungiData.find(fungi => fungi.id === firstPrediction.id);
+    const fungi = fungiData.find(fungi => +fungi.id === firstPrediction.id);
 
     return (
       <View style={styles.mushroomItemContainer}>
@@ -66,7 +66,7 @@ const MushroomHistory: FC<MushroomHistoryProps> = ({ navigation }) => {
             <>
               <MushroomImage isEdible={fungi.isEdible} image={{ uri: item.path }} />
               <Text style={styles.predictionName}>
-                {fungi.name} ({firstPrediction.probability}%)
+                {fungi.name}
               </Text>
             </>
           )}

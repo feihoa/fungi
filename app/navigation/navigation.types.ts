@@ -2,7 +2,7 @@ import { ComponentType } from 'react';
 
 export type RootStackParamList = {
   Home: undefined;
-  Camera: undefined;
+  Recognizer: undefined;
   MushroomHistory: undefined;
   MushroomCard: { id: number };
 };

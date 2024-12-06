@@ -1,18 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { Text, View, Image, StyleSheet, FlatList } from 'react-native';
-import * as SQLite from 'expo-sqlite';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '@/navigation/navigation.types';
 import Loader from '@/components/shared/Loader';
 import fungiData from '../../../../assets/fungs/fungs';
 import MushroomImage from '@/components/shared/MushroomImage';
 import { useSQLiteContext } from 'expo-sqlite';
-import { AppConstants } from '@/app.constants';
 
 type MushroomCardProps = NativeStackScreenProps<RootStackParamList, 'MushroomCard'>;
 
 interface Prediction {
-  id: string;
+  id: number;
   probability: number;
 }
 
@@ -51,7 +49,7 @@ const MushroomCard: React.FC<MushroomCardProps> = ({ route }) => {
   }
 
   const renderPredictionItem = ({ item }: { item: Prediction }) => {
-    const fungi = fungiData.find(fungi => fungi.id === item.id);
+    const fungi = fungiData.find(fung => +fung.id === item.id);
 
     if (!fungi) return null;
 

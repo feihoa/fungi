@@ -2,7 +2,7 @@ import Home from '@/components/screens/home/Home';
 import { IRouter } from './navigation.types';
 import MushroomHistory from '@/components/screens/mushroom-history/MushroomHistory';
 import MushroomCard from '@/components/screens/mushroom-card/MushroomCard';
-import Camera from '@/components/screens/camera/Camera';
+import Recognizer from '@/components/screens/recognizer/Recognizer';
 
 export const routes: IRouter[] = [
   {
@@ -11,8 +11,8 @@ export const routes: IRouter[] = [
     title: 'Главная',
   },
   {
-    name: 'Camera',
-    component: Camera,
+    name: 'Recognizer',
+    component: Recognizer,
     title: 'Камера',
   },
   {

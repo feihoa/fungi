@@ -3,7 +3,7 @@ import { Dimensions, Image, StyleSheet } from 'react-native';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
-import { IsEdible } from 'assets/fungs/fungs';
+import { IsEdible } from '../../../assets/fungs/fungs';
 
 type MushroomImageProps = {
   isEdible: IsEdible;

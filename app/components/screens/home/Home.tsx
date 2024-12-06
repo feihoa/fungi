@@ -19,7 +19,7 @@ const Home: React.FC<HomeScreenProps> = ({ navigation }) => {
       <Text style={styles.title}>Добро пожаловать в Fungi!</Text>
       <TouchableOpacity
         style={[styles.button, styles.recognizeButton]}
-        onPress={() => navigation.navigate('Camera')}>
+        onPress={() => navigation.navigate('Recognizer')}>
         <Text style={styles.buttonText}>Распознать гриб</Text>
       </TouchableOpacity>
       <TouchableOpacity

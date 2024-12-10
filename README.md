@@ -1,3 +1,11 @@
+# App screens:
+
+![Image alt](https://github.com/feihoa/fungi/raw/master/screens/image0/image.png)
+![Image alt](https://github.com/feihoa/fungi/raw/master/screens/image1/image.png)
+![Image alt](https://github.com/feihoa/fungi/raw/master/screens/image2/image.png)
+![Image alt](https://github.com/feihoa/fungi/raw/master/screens/image3/image.png)
+![Image alt](https://github.com/feihoa/fungi/raw/master/screens/image4/image.png)
+
 # Welcome to your Expo app 👋
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).

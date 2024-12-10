@@ -11,6 +11,10 @@ import { useSQLiteContext } from 'expo-sqlite';
 import * as tf from '@tensorflow/tfjs';
 import { bundleResourceIO, decodeJpeg } from '@tensorflow/tfjs-react-native';
 import { manipulateAsync, SaveFormat } from 'expo-image-manipulator';
+import CameraOverlay from '@/components/shared/CameraOverlay';
+import SearchButton from '@/components/shared/SearchButton';
+import MainButton from '@/components/shared/MainButton';
+import { Prediction } from '../types';
 
 type CameraScreenProps = NativeStackScreenProps<RootStackParamList, 'Recognizer'>;
 
@@ -51,17 +55,11 @@ const Recognizer: React.FC<CameraScreenProps> = ({ navigation }) => {
     requestPermissions();
   }, [requestPermission]);
 
-  if (cameraPermission === null) {
-    return <View style={styles.centeredView} />;
-  }
-
   if (!cameraPermission) {
     return (
-      <View style={[styles.centeredView, styles.permissionContainer]}>
+      <View style={styles.centeredView}>
         <Text style={styles.permissionText}>Необходимо разрешение для доступа к камере</Text>
-        <TouchableOpacity style={styles.permissionButton} onPress={requestPermission}>
-          <Text style={styles.permissionButtonText}>Предоставить доступ</Text>
-        </TouchableOpacity>
+        <MainButton onPress={requestPermission} text="Предоставить доступ"></MainButton>
       </View>
     );
   }
@@ -142,12 +140,10 @@ const Recognizer: React.FC<CameraScreenProps> = ({ navigation }) => {
         const predictionsAll: number[][] = await tensor.arraySync();
         const probabilities = predictionsAll[0];
 
-        const predictions: { id: number; probability: number }[] = probabilities.map(
-          (probability, id) => ({
-            id,
-            probability: +(probability * 100).toFixed(),
-          })
-        );
+        const predictions: Prediction[] = probabilities.map((probability, id) => ({
+          id,
+          probability: +(probability * 100).toFixed(),
+        }));
 
         const topPredictions = predictions
           .filter(pr => pr.probability !== 0)
@@ -162,7 +158,7 @@ const Recognizer: React.FC<CameraScreenProps> = ({ navigation }) => {
     }
   };
 
-  const saveImageWithPredictions = async (path: string, predictions: any) => {
+  const saveImageWithPredictions = async (path: string, predictions: Prediction[]) => {
     try {
       const statement = await db.prepareAsync(
         'INSERT INTO fungi (path, predictions) VALUES (?, ?)'
@@ -196,15 +192,18 @@ const Recognizer: React.FC<CameraScreenProps> = ({ navigation }) => {
   return (
     <View style={styles.cameraContainer}>
       {!load && (
-        <CameraView style={styles.cameraView} ref={cameraRef}>
-          <TouchableOpacity style={styles.galleryButton} onPress={pickImage}>
-            <AntDesign name="picture" size={32} color="white" />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.saveButton} onPress={takePicture}>
-            <Text style={styles.saveButtonText}>Распознать</Text>
-          </TouchableOpacity>
-          <Text style={styles.tip}>Поместите гриб в центре кадра</Text>
-        </CameraView>
+        <>
+          <CameraView style={styles.cameraView} ref={cameraRef}>
+            <CameraOverlay></CameraOverlay>
+            <TouchableOpacity style={styles.galleryButton} onPress={pickImage}>
+              <AntDesign name="picture" size={32} color="white" />
+            </TouchableOpacity>
+          </CameraView>
+          <View style={styles.buttonsView}>
+            <Text style={styles.tip}>Поместите гриб в центре кадра</Text>
+            <SearchButton onPress={takePicture}></SearchButton>
+          </View>
+        </>
       )}
       {load && <Loader />}
     </View>
@@ -213,69 +212,45 @@ const Recognizer: React.FC<CameraScreenProps> = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   tip: {
-    position: 'absolute',
-    top: 30,
+    marginTop: 10,
     fontSize: 22,
     textAlign: 'center',
     width: '100%',
     fontWeight: 500,
     lineHeight: 26,
-    backgroundColor: 'white'
+    color: 'white',
   },
   centeredView: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  permissionContainer: {
-    backgroundColor: '#f0f0f0',
-  },
   permissionText: {
-    fontSize: 18,
-    color: '#555',
+    fontSize: 22,
+    width: '80%',
+    color: 'white',
+    fontWeight: 500,
     textAlign: 'center',
-    marginBottom: 20,
-  },
-  permissionButton: {
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    backgroundColor: '#007bff',
-    borderRadius: 10,
-  },
-  permissionButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
+    marginBottom: 60,
   },
   cameraContainer: {
     flex: 1,
-    backgroundColor: 'black',
   },
   cameraView: {
-    flex: 1,
+    height: '75%',
+  },
+  buttonsView: {
+    height: '23%',
+    display: 'flex',
+    alignItems: 'center',
   },
   galleryButton: {
     position: 'absolute',
     bottom: 30,
     right: 30,
     padding: 10,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: 'rgba(150, 255, 200, 0.3)',
     borderRadius: 30,
-  },
-  saveButton: {
-    position: 'absolute',
-    bottom: 30,
-    left: '50%',
-    width: '50%',
-    transform: [{ translateX: -100 }],
-    padding: 12,
-    backgroundColor: '#28a745',
-    borderRadius: 8,
-  },
-  saveButtonText: {
-    textAlign: 'center',
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
   },
 });
 

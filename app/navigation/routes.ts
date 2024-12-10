@@ -18,11 +18,11 @@ export const routes: IRouter[] = [
   {
     name: 'MushroomHistory',
     component: MushroomHistory,
-    title: 'История',
+    title: 'История распознаваний',
   },
   {
     name: 'MushroomCard',
     component: MushroomCard,
-    title: 'Результат',
+    title: 'Результаты распознавания',
   },
 ];

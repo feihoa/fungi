@@ -1,24 +1,23 @@
 import React, { FC, useState, useEffect } from 'react';
-import { Text, View, FlatList, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { Text, View, FlatList, StyleSheet, Alert } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '@/navigation/navigation.types';
 import fungiData from '../../../../assets/fungs/fungs';
 import { useSQLiteContext } from 'expo-sqlite';
-import MushroomImage from '@/components/shared/MushroomImage';
-import AntDesign from '@expo/vector-icons/AntDesign';
-import { AppConstants } from '@/app.constants';
+import { Mushroom } from '../types';
+import ListElement from './components/ListElement';
 
 type MushroomHistoryProps = NativeStackScreenProps<RootStackParamList, 'MushroomHistory'>;
 
 const MushroomHistory: FC<MushroomHistoryProps> = ({ navigation }) => {
   const db = useSQLiteContext();
 
-  const [mushrooms, setMushrooms] = useState<any[]>([]);
+  const [mushrooms, setMushrooms] = useState<Mushroom[]>([]);
 
   useEffect(() => {
     const fetchHistory = async () => {
       try {
-        const data: any = await db.getAllAsync('SELECT * FROM fungi');
+        const data: Mushroom[] = await db.getAllAsync('SELECT * FROM fungi ORDER BY dateTime');
         setMushrooms(data);
       } catch (error) {
         console.error('Ошибка при загрузке истории распознаваний:', error);
@@ -57,24 +56,15 @@ const MushroomHistory: FC<MushroomHistoryProps> = ({ navigation }) => {
     const firstPrediction = predictionsData[0];
     const fungi = fungiData.find(fungi => +fungi.id === firstPrediction.id);
 
-    return (
-      <View style={styles.mushroomItemContainer}>
-        <TouchableOpacity
-          style={styles.mushroomItem}
-          onPress={() => navigation.navigate('MushroomCard', { id: item.id })}>
-          {fungi && (
-            <>
-              <MushroomImage isEdible={fungi.isEdible} image={{ uri: item.path }} />
-              <Text style={styles.predictionName}>
-                {fungi.name}
-              </Text>
-            </>
-          )}
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.deleteButton} onPress={() => confirmDelete(item.id)}>
-          <AntDesign name="delete" size={14} color="red" />
-        </TouchableOpacity>
-      </View>
+    return fungi ? (
+      <ListElement
+        onPress={() => navigation.navigate('MushroomCard', { id: item.id })}
+        onDeletePress={() => confirmDelete(item.id)}
+        isEdible={fungi.isEdible}
+        path={item.path}
+        name={fungi.name}></ListElement>
+    ) : (
+      <></>
     );
   };
 
@@ -94,13 +84,12 @@ const MushroomHistory: FC<MushroomHistoryProps> = ({ navigation }) => {
   };
 
   const groupedMushrooms = [];
-  for (let i = 0; i < mushrooms.length; i += 2) {
-    groupedMushrooms.push(mushrooms.slice(i, i + 2));
+  for (let i = mushrooms.length - 1; i >= 0; i--) {
+    groupedMushrooms.push(mushrooms.slice(i, i + 1));
   }
 
   return (
-    <View style={[styles.container, { backgroundColor: AppConstants.primary }]}>
-      <Text style={styles.title}>История распознаваний</Text>
+    <View style={[styles.container]}>
       {groupedMushrooms.length > 0 && (
         <FlatList
           data={groupedMushrooms}
@@ -117,20 +106,17 @@ const MushroomHistory: FC<MushroomHistoryProps> = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f9f9f9',
+    backgroundColor: 'transparent',
     padding: 20,
+    paddingTop: 10,
+    alignItems: 'center',
   },
   noData: {
     textAlign: 'center',
-    marginTop: '50%',
+    marginTop: '80%',
     fontSize: 26,
+    color: 'white',
     fontWeight: '600',
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 20,
   },
   rowContainer: {
     flexDirection: 'row',
@@ -138,41 +124,10 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   rowContent: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  mushroomItemContainer: {
-    flexDirection: 'row',
+    width: '100%',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    padding: 10,
-    paddingRight: 0,
-    marginRight: 10,
-    alignSelf: 'stretch',
-  },
-  mushroomItem: {
-    flex: 1,
-    alignItems: 'center',
-  },
-  predictionName: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#555',
-    textAlign: 'center',
-  },
-  deleteButton: {
-    marginLeft: 10,
-    position: 'absolute',
-    top: 20,
-    right: 20,
-    padding: 4,
-    borderRadius: 4,
-    backgroundColor: '#f8d7da',
     justifyContent: 'center',
-    alignItems: 'center',
-    opacity: 0.5,
+    position: 'relative',
   },
 });
 

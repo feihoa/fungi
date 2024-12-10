@@ -4,7 +4,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '@/navigation/navigation.types';
 import Loader from '@/components/shared/Loader';
 import fungiData from '../../../../assets/fungs/fungs';
-import MushroomImage from '@/components/shared/MushroomImage';
+import MushroomImage from './components/MushroomImage';
 import { useSQLiteContext } from 'expo-sqlite';
 
 type MushroomCardProps = NativeStackScreenProps<RootStackParamList, 'MushroomCard'>;
@@ -67,7 +67,6 @@ const MushroomCard: React.FC<MushroomCardProps> = ({ route }) => {
   return (
     <View style={styles.wrapper}>
       <Image source={{ uri: mushroomPath }} style={styles.mainImage} />
-      <Text style={styles.predictionsTitle}>Результаты распознавания:</Text>
       <FlatList
         contentContainerStyle={styles.container}
         data={predictions}
@@ -81,19 +80,19 @@ const MushroomCard: React.FC<MushroomCardProps> = ({ route }) => {
 const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
-    backgroundColor: '#f9f9f9',
+    backgroundColor: 'transparent',
   },
   loaderContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f9f9f9',
+    backgroundColor: 'transparent',
   },
   container: {
     flexGrow: 1,
     padding: 20,
     paddingTop: 10,
-    backgroundColor: '#f9f9f9',
+    backgroundColor: 'transparent',
   },
   mainImage: {
     width: '100%',
@@ -115,19 +114,19 @@ const styles = StyleSheet.create({
   predictionsTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#333',
+    color: 'white',
     marginTop: 10,
     paddingHorizontal: 20,
   },
   predictionText: {
     fontSize: 16,
-    color: '#555',
+    color: 'white',
     marginBottom: 4,
   },
   predictionTextName: {
     fontSize: 18,
     fontWeight: 600,
-    color: '#555',
+    color: 'white',
     marginBottom: 4,
   },
 });

@@ -1,5 +1,3 @@
-import { ComponentType } from 'react';
-
 export type RootStackParamList = {
   Home: undefined;
   Recognizer: undefined;

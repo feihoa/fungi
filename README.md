@@ -1,10 +1,11 @@
 # App screens:
-
-![Image alt](https://github.com/feihoa/fungi/raw/master/screens/image0/image.png)
-![Image alt](https://github.com/feihoa/fungi/raw/master/screens/image1/image.png)
-![Image alt](https://github.com/feihoa/fungi/raw/master/screens/image2/image.png)
-![Image alt](https://github.com/feihoa/fungi/raw/master/screens/image3/image.png)
-![Image alt](https://github.com/feihoa/fungi/raw/master/screens/image4/image.png)
+<div>
+   <img src="https://github.com/feihoa/fungi/blob/master/screens/image0.png" alt="alt text" width="190" />
+   <img src="https://github.com/feihoa/fungi/blob/master/screens/image2.png" alt="alt text" width="190" />
+   <img src="https://github.com/feihoa/fungi/blob/master/screens/image1.png" alt="alt text" width="190" />
+   <img src="https://github.com/feihoa/fungi/blob/master/screens/image3.png" alt="alt text" width="190" />
+   <img src="https://github.com/feihoa/fungi/blob/master/screens/image4.png" alt="alt text" width="190" />
+</div>
 
 # Welcome to your Expo app 👋
 

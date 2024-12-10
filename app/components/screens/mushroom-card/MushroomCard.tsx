@@ -111,23 +111,17 @@ const styles = StyleSheet.create({
     gap: 15,
     justifyContent: 'center',
   },
-  predictionsTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: 'white',
-    marginTop: 10,
-    paddingHorizontal: 20,
-  },
   predictionText: {
     fontSize: 16,
     color: 'white',
     marginBottom: 4,
+    fontFamily: 'ComicSansRegular',
   },
   predictionTextName: {
     fontSize: 18,
-    fontWeight: 600,
     color: 'white',
     marginBottom: 4,
+    fontFamily: 'ComicSansBold',
   },
 });
 

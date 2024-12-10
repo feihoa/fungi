@@ -3,6 +3,8 @@ import Navigation from '@/navigation/Navigation';
 import { SQLiteProvider } from 'expo-sqlite';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { ImageBackground, StyleSheet } from 'react-native';
+import * as Font from 'expo-font';
+import { useFonts } from 'expo-font';
 
 async function initializeDatabase(db: { execAsync: (arg0: string) => any }) {
   try {
@@ -21,19 +23,30 @@ async function initializeDatabase(db: { execAsync: (arg0: string) => any }) {
 }
 
 export default function App() {
+  const [loaded, error] = useFonts({
+    ComicSansRegular: require('./assets/fonts/comic-sans-regular.ttf'),
+    ComicSansBold: require('./assets/fonts/comic-sans-bold.ttf'),
+  });
+
+  if (!loaded && !error) {
+    return null;
+  }
+
   return (
-    <SQLiteProvider databaseName="fungi.db" onInit={initializeDatabase}>
-      <SafeAreaProvider>
-        <SafeAreaView style={styles.container} edges={['left', 'right']}>
-          <ImageBackground
-            style={styles.image}
-            source={require('./assets/images/bg.png')}
-            resizeMode="cover">
-            <Navigation />
-          </ImageBackground>
-        </SafeAreaView>
-      </SafeAreaProvider>
-    </SQLiteProvider>
+    loaded && (
+      <SQLiteProvider databaseName="fungi.db" onInit={initializeDatabase}>
+        <SafeAreaProvider>
+          <SafeAreaView style={styles.container} edges={['left', 'right']}>
+            <ImageBackground
+              style={styles.image}
+              source={require('./assets/images/bg.png')}
+              resizeMode="cover">
+              <Navigation />
+            </ImageBackground>
+          </SafeAreaView>
+        </SafeAreaProvider>
+      </SQLiteProvider>
+    )
   );
 }
 

@@ -40,27 +40,20 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 40,
-    fontWeight: 'bold',
     color: 'white',
     borderRadius: 5,
-    marginBottom: '20%',
     marginTop: '65%',
     textAlign: 'center',
-    fontFamily: 'ComicSansMS',
-  },
-  subtitle: {
-    fontSize: 16,
-    color: '#666',
-    marginBottom: 20,
-    textAlign: 'center',
+    fontFamily: 'ComicSansBold',
   },
   warningText: {
-    bottom: '6%',
+    marginTop: '5%',
+    marginBottom: '10%',
     borderRadius: 4,
     fontSize: 14,
     textAlign: 'center',
-    fontWeight: 'bold',
     color: 'white',
+    fontFamily: 'ComicSansRegular',
   },
 });
 

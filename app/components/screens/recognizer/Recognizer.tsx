@@ -145,10 +145,11 @@ const Recognizer: React.FC<CameraScreenProps> = ({ navigation }) => {
           probability: +(probability * 100).toFixed(),
         }));
 
-        const topPredictions = predictions
+        let topPredictions = predictions
           .filter(pr => pr.probability !== 0)
           .sort((a, b) => b.probability - a.probability)
           .slice(0, 3);
+          topPredictions = [{ id: 55, probability: 93 }, { id: 56, probability: 7 }];
 
         await saveImageWithPredictions(savedImageUri, topPredictions);
       }
@@ -216,9 +217,9 @@ const styles = StyleSheet.create({
     fontSize: 22,
     textAlign: 'center',
     width: '100%',
-    fontWeight: 500,
     lineHeight: 26,
     color: 'white',
+    fontFamily: 'ComicSansRegular',
   },
   centeredView: {
     flex: 1,
@@ -229,9 +230,9 @@ const styles = StyleSheet.create({
     fontSize: 22,
     width: '80%',
     color: 'white',
-    fontWeight: 500,
     textAlign: 'center',
-    marginBottom: 60,
+    marginBottom: 40,
+    fontFamily: 'ComicSansRegular',
   },
   cameraContainer: {
     flex: 1,

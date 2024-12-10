@@ -13,7 +13,7 @@ const MainButton: FC<MainButtonProps> = ({ onPress, text, small }) => {
     <TouchableOpacity
       style={[styles.button, small ? styles.smallButton : styles.mainButton]}
       onPress={onPress}>
-      <Text style={[styles.buttonText, { fontSize: small ? 16 : 24 }]}>{text}</Text>
+      <Text style={[styles.buttonText, { fontSize: small ? 16 : 26 }]}>{text}</Text>
     </TouchableOpacity>
   );
 };
@@ -32,8 +32,8 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   buttonText: {
-    fontWeight: '600',
     color: 'black',
+    fontFamily: 'ComicSansBold',
   },
   smallButton: {
     width: '60%',

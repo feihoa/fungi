@@ -84,8 +84,8 @@ const MushroomHistory: FC<MushroomHistoryProps> = ({ navigation }) => {
   };
 
   const groupedMushrooms = [];
-  for (let i = mushrooms.length - 1; i >= 0; i--) {
-    groupedMushrooms.push(mushrooms.slice(i, i + 1));
+  for (let i = 0; i < mushrooms.length; i += 2) {
+    groupedMushrooms.push(mushrooms.slice(i, i + 2));
   }
 
   return (
@@ -105,29 +105,22 @@ const MushroomHistory: FC<MushroomHistoryProps> = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: 'transparent',
     padding: 20,
     paddingTop: 10,
-    alignItems: 'center',
   },
   noData: {
     textAlign: 'center',
     marginTop: '80%',
     fontSize: 26,
     color: 'white',
-    fontWeight: '600',
+    fontFamily: 'ComicSansRegular',
   },
   rowContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 20,
   },
   rowContent: {
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'relative',
+    display: 'flex',
+    gap: 20,
   },
 });
 

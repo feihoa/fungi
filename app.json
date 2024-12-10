@@ -31,7 +31,7 @@
       [
         "expo-font",
         {
-          "fonts": ["./assets/fonts/ComicSansMS.ttf"]
+          "fonts": ["./assets/fonts/comic-sans-regular.ttf", "./assets/fonts/comic-sans-bold.ttf"]
         }
       ],
       [

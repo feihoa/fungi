@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { Text, Image, View, StyleSheet, GestureResponderEvent } from 'react-native';
+import { Text, Image, View, StyleSheet, GestureResponderEvent, Dimensions } from 'react-native';
 import { IsEdible } from 'assets/fungs/fungs';
 import CardButton, { CardButtonEnum } from './CardButton';
 import IsEdibleIcon from '@/components/shared/IsEdibleIcon';
@@ -12,6 +12,8 @@ type ListElementProps = {
   name: string;
 };
 
+const deviceWidth = Dimensions.get('window').width
+
 const ListElement: FC<ListElementProps> = ({ onPress, onDeletePress, isEdible, path, name }) => {
   return (
     <View
@@ -21,7 +23,7 @@ const ListElement: FC<ListElementProps> = ({ onPress, onDeletePress, isEdible, p
           borderColor: isEdible === 0 ? '#A5D6A7' : isEdible === 1 ? '#FFCC80' : '#EF9A9A',
         },
       ]}>
-      <IsEdibleIcon style={styles.icon} isEdible={isEdible} size={48}></IsEdibleIcon>
+      <IsEdibleIcon style={styles.icon} isEdible={isEdible} size={28}></IsEdibleIcon>
       <CardButton onPress={onDeletePress} text="Удалить" type={CardButtonEnum.Delete}></CardButton>
       <Image source={{ uri: path }} style={styles.image} />
       <Text style={styles.predictionName}>{name}</Text>
@@ -36,29 +38,25 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderRadius: 12,
     padding: 10,
-    minWidth: '85%',
     borderWidth: 2,
-    shadowColor: 'black',
-    shadowOpacity: 0.26,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 10,
-    elevation: 3,
-    backgroundColor: '#E0E0E0',
+    backgroundColor: '#faf9e5',
+    width: (deviceWidth - 40) / 2 - 10,
+    marginBottom: 20,
   },
   image: {
-    width: 210,
-    height: 210,
+    width: 110,
+    height: 110,
     marginBottom: 10,
     borderRadius: 100,
     borderColor: '#2b4531',
     borderWidth: 3,
   },
   predictionName: {
-    fontSize: 26,
-    fontWeight: '700',
+    fontSize: 16,
     color: '#212121',
     textAlign: 'center',
     paddingBottom: 10,
+    fontFamily: 'ComicSansBold',
   },
   icon: {
     padding: 2,

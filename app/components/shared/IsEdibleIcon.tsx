@@ -26,7 +26,13 @@ const IsEdibleIcon: FC<IsEdibleIconProps> = ({ isEdible, size, style = {} }) => 
       ]}
       name="mushroom"
       size={size}
-      color={isEdible === 0 ? 'green' : isEdible === 1 ? 'orange' : 'red'}
+      color={
+        isEdible === 0
+          ? 'rgba(102, 187, 106, 0.8)'
+          : isEdible === 1
+            ? 'rgba(255, 167, 38, 0.8)'
+            : 'rgba(244, 67, 54, 0.8)'
+      }
     />
   );
 };

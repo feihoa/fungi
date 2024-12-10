@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 10,
     elevation: 3,
-    backgroundColor: '#FAFAFA',
+    backgroundColor: '#E0E0E0',
   },
   image: {
     width: 210,

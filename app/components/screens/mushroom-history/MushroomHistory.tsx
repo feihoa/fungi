@@ -13,6 +13,7 @@ const MushroomHistory: FC<MushroomHistoryProps> = ({ navigation }) => {
   const db = useSQLiteContext();
 
   const [mushrooms, setMushrooms] = useState<Mushroom[]>([]);
+  const [groupedMushrooms, setGroupedMushrooms] = useState<Mushroom[][]>([]);
 
   useEffect(() => {
     const fetchHistory = async () => {
@@ -26,6 +27,15 @@ const MushroomHistory: FC<MushroomHistoryProps> = ({ navigation }) => {
 
     fetchHistory();
   }, []);
+  
+
+  useEffect(() => {
+    const grouped = [];
+    for (let i = 0; i < mushrooms.length; i += 2) {
+      grouped.push(mushrooms.slice(i, i + 2));
+    }
+    setGroupedMushrooms(grouped);
+  }, [mushrooms]);
 
   const handleDelete = async (id: number) => {
     try {
@@ -62,7 +72,8 @@ const MushroomHistory: FC<MushroomHistoryProps> = ({ navigation }) => {
         onDeletePress={() => confirmDelete(item.id)}
         isEdible={fungi.isEdible}
         path={item.path}
-        name={fungi.name}></ListElement>
+        name={fungi.name}
+      />
     ) : (
       <></>
     );
@@ -83,22 +94,18 @@ const MushroomHistory: FC<MushroomHistoryProps> = ({ navigation }) => {
     );
   };
 
-  const groupedMushrooms = [];
-  for (let i = 0; i < mushrooms.length; i += 2) {
-    groupedMushrooms.push(mushrooms.slice(i, i + 2));
-  }
-
   return (
     <View style={[styles.container]}>
-      {groupedMushrooms.length > 0 && (
+      {groupedMushrooms.length > 0 ? (
         <FlatList
           data={groupedMushrooms}
           renderItem={renderMushroomRow}
           keyExtractor={(item, index) => `${index}`}
           showsVerticalScrollIndicator={false}
         />
+      ) : (
+        <Text style={styles.noData}>Нет данных</Text>
       )}
-      {!groupedMushrooms.length && <Text style={styles.noData}>Нет данных</Text>}
     </View>
   );
 };

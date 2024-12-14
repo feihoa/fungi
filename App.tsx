@@ -3,7 +3,6 @@ import Navigation from '@/navigation/Navigation';
 import { SQLiteProvider } from 'expo-sqlite';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { ImageBackground, StyleSheet } from 'react-native';
-import * as Font from 'expo-font';
 import { useFonts } from 'expo-font';
 
 async function initializeDatabase(db: { execAsync: (arg0: string) => any }) {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { Text, TouchableOpacity, View, StyleSheet, Alert } from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
@@ -13,13 +13,12 @@ import { bundleResourceIO, decodeJpeg } from '@tensorflow/tfjs-react-native';
 import { manipulateAsync, SaveFormat } from 'expo-image-manipulator';
 import CameraOverlay from '@/components/shared/CameraOverlay';
 import SearchButton from '@/components/shared/SearchButton';
-import MainButton from '@/components/shared/MainButton';
 import { Prediction } from '../types';
+import CameraHandler from './components/CameraHandler';
 
 type CameraScreenProps = NativeStackScreenProps<RootStackParamList, 'Recognizer'>;
 
 const Recognizer: React.FC<CameraScreenProps> = ({ navigation }) => {
-  const [cameraPermission, setCameraPermission] = useState<boolean | null>(null);
   const [isTfReady, setIsTfReady] = useState<boolean>(false);
   const [permission, requestPermission] = useCameraPermissions();
   const [load, setLoad] = useState<boolean>(false);
@@ -47,23 +46,6 @@ const Recognizer: React.FC<CameraScreenProps> = ({ navigation }) => {
       .catch(err => console.log(err, 'err'));
   };
 
-  useEffect(() => {
-    const requestPermissions = async () => {
-      const cameraStatus = await requestPermission();
-      setCameraPermission(cameraStatus.granted);
-    };
-    requestPermissions();
-  }, [requestPermission]);
-
-  if (!cameraPermission) {
-    return (
-      <View style={styles.centeredView}>
-        <Text style={styles.permissionText}>Необходимо разрешение для доступа к камере</Text>
-        <MainButton onPress={requestPermission} text="Предоставить доступ"></MainButton>
-      </View>
-    );
-  }
-
   const saveImageToAppFolder = async (uri: string) => {
     if (!FileSystem.documentDirectory) {
       return null;
@@ -83,14 +65,22 @@ const Recognizer: React.FC<CameraScreenProps> = ({ navigation }) => {
 
   const pickImage = async () => {
     setLoad(true);
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      quality: 1,
-    });
+    try {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        quality: 1,
+      });
 
-    if (!result.canceled && result.assets?.[0]?.uri) {
-      handleSave(result.assets[0].uri);
+      if (!result.canceled && result.assets?.[0]?.uri) {
+        await handleSave(result.assets[0].uri);
+      } else {
+        setLoad(false);
+      }
+    } catch (error) {
+      console.error('Ошибка выбора изображения:', error);
+      Alert.alert('Ошибка', 'Не удалось открыть галерею');
+      setLoad(false);
     }
   };
 
@@ -149,7 +139,6 @@ const Recognizer: React.FC<CameraScreenProps> = ({ navigation }) => {
           .filter(pr => pr.probability !== 0)
           .sort((a, b) => b.probability - a.probability)
           .slice(0, 3);
-          topPredictions = [{ id: 55, probability: 93 }, { id: 56, probability: 7 }];
 
         await saveImageWithPredictions(savedImageUri, topPredictions);
       }
@@ -191,49 +180,31 @@ const Recognizer: React.FC<CameraScreenProps> = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.cameraContainer}>
-      {!load && (
-        <>
-          <CameraView style={styles.cameraView} ref={cameraRef}>
-            <CameraOverlay></CameraOverlay>
-            <TouchableOpacity style={styles.galleryButton} onPress={pickImage}>
-              <AntDesign name="picture" size={32} color="white" />
-            </TouchableOpacity>
-          </CameraView>
-          <View style={styles.buttonsView}>
-            <Text style={styles.tip}>Поместите гриб в центре кадра</Text>
-            <SearchButton onPress={takePicture}></SearchButton>
-          </View>
-        </>
-      )}
-      {load && <Loader />}
-    </View>
+    permission && (
+      <CameraHandler requestPermission={requestPermission} permissionStatus={permission}>
+        <View style={styles.cameraContainer}>
+          {!load && (
+            <>
+              <CameraView style={styles.cameraView} ref={cameraRef}>
+                <CameraOverlay />
+                <TouchableOpacity style={styles.galleryButton} onPress={pickImage}>
+                  <AntDesign name="picture" size={32} color="white" />
+                </TouchableOpacity>
+              </CameraView>
+              <View style={styles.buttonsView}>
+                <Text style={styles.tip}>Поместите гриб в центре кадра</Text>
+                <SearchButton onPress={takePicture} />
+              </View>
+            </>
+          )}
+          {load && <Loader />}
+        </View>
+      </CameraHandler>
+    )
   );
 };
 
 const styles = StyleSheet.create({
-  tip: {
-    marginTop: 10,
-    fontSize: 22,
-    textAlign: 'center',
-    width: '100%',
-    lineHeight: 26,
-    color: 'white',
-    fontFamily: 'ComicSansRegular',
-  },
-  centeredView: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  permissionText: {
-    fontSize: 22,
-    width: '80%',
-    color: 'white',
-    textAlign: 'center',
-    marginBottom: 40,
-    fontFamily: 'ComicSansRegular',
-  },
   cameraContainer: {
     flex: 1,
   },
@@ -252,6 +223,15 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: 'rgba(150, 255, 200, 0.3)',
     borderRadius: 30,
+  },
+  tip: {
+    marginTop: 10,
+    fontSize: 22,
+    textAlign: 'center',
+    width: '100%',
+    lineHeight: 26,
+    color: 'white',
+    fontFamily: 'ComicSansRegular',
   },
 });
 

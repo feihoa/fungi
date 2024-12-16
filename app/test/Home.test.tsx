@@ -2,7 +2,7 @@ import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import Home from './Home';
+import Home from '../components/screens/home/Home';
 
 describe('Экран "Домой"', () => {
   const Stack = createNativeStackNavigator();

@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react-native';
 import { Alert } from 'react-native';
-import MushroomHistory from './MushroomHistory';
+import MushroomHistory from '../components/screens/mushroom-history/MushroomHistory';
 import { useSQLiteContext } from 'expo-sqlite';
 import { NavigationContainer } from '@react-navigation/native';
 

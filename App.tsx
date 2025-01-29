@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Navigation from '@/navigation/Navigation';
 import { SQLiteProvider } from 'expo-sqlite';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { ImageBackground, StyleSheet } from 'react-native';
 import { useFonts } from 'expo-font';
+import * as tf from '@tensorflow/tfjs';
+import { loadTFLiteModel, TFLiteModel } from '@tensorflow/tfjs-tflite';
 
 async function initializeDatabase(db: { execAsync: (arg0: string) => any }) {
   try {
@@ -22,30 +24,43 @@ async function initializeDatabase(db: { execAsync: (arg0: string) => any }) {
 }
 
 export default function App() {
+  const [model, setModel] = useState<TFLiteModel | null>(null);
   const [loaded, error] = useFonts({
     ComicSansRegular: require('./assets/fonts/comic-sans-regular.ttf'),
     ComicSansBold: require('./assets/fonts/comic-sans-bold.ttf'),
   });
 
-  if (!loaded && !error) {
+  useEffect(() => {
+    const loadModel = async () => {
+      await tf.setBackend('cpu');
+      await tf.ready();
+      console.log(tf.getBackend());
+
+      const modelUri = './assets/models/fungs/fungs.tflite';
+      const model = await loadTFLiteModel(modelUri);
+      setModel(model);
+    };
+
+    loadModel().catch(console.error);
+  }, []);
+
+  if (!loaded) {
     return null;
   }
 
   return (
-    loaded && (
-      <SQLiteProvider databaseName="fungi.db" onInit={initializeDatabase}>
-        <SafeAreaProvider>
-          <SafeAreaView style={styles.container} edges={['left', 'right']}>
-            <ImageBackground
-              style={styles.image}
-              source={require('./assets/images/bg.png')}
-              resizeMode="cover">
-              <Navigation />
-            </ImageBackground>
-          </SafeAreaView>
-        </SafeAreaProvider>
-      </SQLiteProvider>
-    )
+    <SQLiteProvider databaseName="fungi.db" onInit={initializeDatabase}>
+      <SafeAreaProvider>
+        <SafeAreaView style={styles.container} edges={['left', 'right']}>
+          <ImageBackground
+            style={styles.image}
+            source={require('./assets/images/bg.png')}
+            resizeMode="cover">
+            <Navigation model={'model'} />
+          </ImageBackground>
+        </SafeAreaView>
+      </SafeAreaProvider>
+    </SQLiteProvider>
   );
 }
 

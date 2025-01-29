@@ -65,8 +65,8 @@ const fungi: FungusJson[] = [
   {
     "id": "22",
     "name": "Говорушка ворончатая",
-    "description": "Условно-съедобный гриб, часто используется в засолке.",
-    "image": require("./images/Infundibulicybe_Gibba.jpg"),
+    "description": "Cъедобный гриб, часто используется в засолке.",
+    "image": require("./images/Infundibulicybe_gibba.jpg"),
     "isEdible": 0
   },
   {
@@ -163,13 +163,13 @@ const fungi: FungusJson[] = [
   {
     "id": "61",
     "name": "Моховик пестрый",
-    "description": "Съедобный гриб, но с менее выраженным вкусом.",
+    "description": "Съедобный гриб, но с мало выраженным вкусом.",
     "image": require("./images/Xerocomellus_chrysenteron.jpg"),
     "isEdible": 0
   },
   {
     "id": "11",
-    "name": "Навозник белый",
+    "name": "Чернильный гриб",
     "description": "Съедобный гриб в молодом возрасте, становится ядовитым в зрелости.",
     "image": require("./images/Coprinus_comatus.jpg"),
     "isEdible": 0
@@ -310,21 +310,21 @@ const fungi: FungusJson[] = [
   {
     "id": "45",
     "name": "Говорушка перевернутая",
-    "description": "Несъедобный гриб, может вызвать расстройства пищеварения у некоторых людей.",
+    "description": "Несъедобный гриб, может вызвать расстройства пищеварения.",
     "image": require("./images/Paralepista_flaccida.jpg"),
     "isEdible": 2
   },
   {
     "id": "24",
     "name": "Груздь золотисто-желтый",
-    "description": "Несъедобный гриб, ценится за вкус и аромат.",
+    "description": "Несъедобный гриб с золотисто-желтой окраской и млечным соком.",
     "image": require("./images/Lactarius_chrysorrheus.jpg"),
     "isEdible": 2
   },
   {
     "id": "59",
     "name": "Желчный гриб",
-    "description": "Несъедобный гриб с неприятным горьким вкусом.",
+    "description": "Несъедобный гриб, внешне похож на белый.",
     "image": require("./images/Tylopilus_felleus.jpg"),
     "isEdible": 2
   },
@@ -401,7 +401,7 @@ const fungi: FungusJson[] = [
   {
     "id": "10",
     "name": "Навозник серый",
-    "description": "Съедобный гриб, но не рекомендуется употреблять с алкоголем.",
+    "description": "Условно съедобный гриб, но не рекомендуется употреблять с алкоголем.",
     "image": require("./images/Coprinopsis_atramentaria.jpg"),
     "isEdible": 1
   },

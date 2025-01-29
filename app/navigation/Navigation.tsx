@@ -3,6 +3,10 @@ import { FC } from 'react';
 import { routes } from './routes';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
+type NavigationProps = {
+  model: any;
+};
+
 const Stack = createNativeStackNavigator();
 
 const theme = {
@@ -14,7 +18,7 @@ const theme = {
   },
 };
 
-const Navigation: FC = () => {
+const Navigation: FC<NavigationProps> = ({ model }) => {
   return (
     <NavigationContainer theme={theme}>
       <Stack.Navigator>
@@ -22,14 +26,14 @@ const Navigation: FC = () => {
           <Stack.Screen
             key={route.name}
             name={route.name}
-            component={route.component}
             options={{
               title: route.title,
               headerStyle: {
                 backgroundColor: 'transparent',
               },
-            }}
-          />
+            }}>
+            {props => <route.component {...props} model={model} />}
+          </Stack.Screen>
         ))}
       </Stack.Navigator>
     </NavigationContainer>

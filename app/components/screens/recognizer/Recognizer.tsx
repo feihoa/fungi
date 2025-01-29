@@ -9,47 +9,25 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '@/navigation/navigation.types';
 import { useSQLiteContext } from 'expo-sqlite';
 import * as tf from '@tensorflow/tfjs';
-import { bundleResourceIO, decodeJpeg } from '@tensorflow/tfjs-react-native';
+import { decodeJpeg } from '@tensorflow/tfjs-react-native';
 import { manipulateAsync, SaveFormat } from 'expo-image-manipulator';
 import CameraOverlay from '@/components/shared/CameraOverlay';
 import SearchButton from '@/components/shared/SearchButton';
 import { Prediction } from '../types';
 import CameraHandler from './components/CameraHandler';
 
-type CameraScreenProps = NativeStackScreenProps<RootStackParamList, 'Recognizer'>;
+type CameraScreenProps = NativeStackScreenProps<RootStackParamList, 'Recognizer'> & {
+  model: any;
+};
 
-const Recognizer: React.FC<CameraScreenProps> = ({ navigation }) => {
-  const [isTfReady, setIsTfReady] = useState<boolean>(false);
+const Recognizer: React.FC<CameraScreenProps> = ({ navigation, model }) => {
   const [permission, requestPermission] = useCameraPermissions();
   const [load, setLoad] = useState<boolean>(false);
   const cameraRef = useRef(null);
-
   const db = useSQLiteContext();
 
-  const requestModel = async () => {
-    if (!isTfReady) {
-      await tf.ready();
-      setIsTfReady(true);
-    }
-
-    const modelWeight = [
-      await require('../../../../assets/models/fungs/group1-shard1of4.bin'),
-      await require('../../../../assets/models/fungs/group1-shard2of4.bin'),
-      await require('../../../../assets/models/fungs/group1-shard3of4.bin'),
-      await require('../../../../assets/models/fungs/group1-shard4of4.bin'),
-    ];
-
-    const modelJson = await require('../../../../assets/models/fungs/model.json');
-
-    return await tf
-      .loadLayersModel(bundleResourceIO(modelJson, modelWeight))
-      .catch(err => console.log(err, 'err'));
-  };
-
   const saveImageToAppFolder = async (uri: string) => {
-    if (!FileSystem.documentDirectory) {
-      return null;
-    }
+    if (!FileSystem.documentDirectory) return null;
     const fileName = uri.split('/').pop();
     const newUri = FileSystem.documentDirectory + fileName;
 
@@ -84,16 +62,17 @@ const Recognizer: React.FC<CameraScreenProps> = ({ navigation }) => {
     }
   };
 
-  const makePredictions = async (img: any, model: any) => {
+  const makePredictions = async (img: any) => {
     try {
       const predictions = model.predict(img);
       return predictions;
     } catch (error) {
+      console.error('Ошибка при предсказании:', error);
       throw error;
     }
   };
 
-  const getPredictions = async (uri: string, model: any) => {
+  const getPredictions = async (uri: string) => {
     const resizedImage = await manipulateAsync(uri, [{ resize: { width: 224, height: 224 } }], {
       compress: 0.7,
       format: SaveFormat.JPEG,
@@ -105,28 +84,20 @@ const Recognizer: React.FC<CameraScreenProps> = ({ navigation }) => {
 
     const imgBuffer = tf.util.encodeString(img64, 'base64').buffer;
     const raw = new Uint8Array(imgBuffer);
-
     let imgTensor = decodeJpeg(raw);
     const scalar = tf.scalar(255);
-
     const tensorScaled = imgTensor.div(scalar);
     const img = tf.reshape(tensorScaled, [1, 224, 224, 3]);
 
-    const predictions = await makePredictions(img, model);
-
-    return predictions;
+    return await makePredictions(img);
   };
 
   const handleSave = async (uri: string) => {
     if (!uri) return;
-
     try {
       const savedImageUri = await saveImageToAppFolder(uri);
-
       if (savedImageUri) {
-        const model = await requestModel();
-        const tensor = await getPredictions(savedImageUri, model);
-
+        const tensor = await getPredictions(savedImageUri);
         const predictionsAll: number[][] = await tensor.arraySync();
         const probabilities = predictionsAll[0];
 
@@ -157,7 +128,7 @@ const Recognizer: React.FC<CameraScreenProps> = ({ navigation }) => {
       const newId = result.lastInsertRowId;
 
       if (newId) {
-        console.log('Изображение и предсказания успешно сохранены с ID:', newId);
+        console.log('Изображение и предсказания сохранены с ID:', newId);
         navigation.navigate('MushroomCard', { id: newId });
         setLoad(false);
       }

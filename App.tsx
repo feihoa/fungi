@@ -56,7 +56,7 @@ export default function App() {
             style={styles.image}
             source={require('./assets/images/bg.png')}
             resizeMode="cover">
-            <Navigation model={'model'} />
+            <Navigation model={model} />
           </ImageBackground>
         </SafeAreaView>
       </SafeAreaProvider>

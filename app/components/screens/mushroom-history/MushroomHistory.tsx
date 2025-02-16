@@ -51,7 +51,7 @@ const MushroomHistory: FC<MushroomHistoryProps> = ({ navigation }) => {
   const confirmDelete = (id: number) => {
     Alert.alert(
       'Удалить запись',
-      'Вы уверены, что хотите удалить эту запись?',
+      'Вы уверены, что хотите удалить это изображение?',
       [
         { text: 'Отмена', style: 'cancel' },
         { text: 'Удалить', style: 'destructive', onPress: () => handleDelete(id) },

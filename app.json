@@ -20,18 +20,29 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "permissions": ["android.permission.CAMERA", "android.permission.RECORD_AUDIO"],
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
+      ],
       "package": "fungi.apk"
     },
     "web": {
-      "favicon": "./assets/images/favicon.svg",
       "bundler": "metro"
     },
     "plugins": [
       [
         "expo-font",
         {
-          "fonts": ["./assets/fonts/comic-sans-regular.ttf", "./assets/fonts/comic-sans-bold.ttf"]
+          "fonts": [
+            "./assets/fonts/comic-sans-regular.ttf",
+            "./assets/fonts/comic-sans-bold.ttf"
+          ]
+        }
+      ],
+      [
+        "react-native-fast-tflite",
+        {
+          "enableCoreMLDelegate": true
         }
       ],
       [
@@ -56,10 +67,17 @@
             "useSQLCipher": false
           },
           "ios": {
-            "customBuildFlags": ["-DSQLITE_ENABLE_DBSTAT_VTAB=1 -DSQLITE_ENABLE_SNAPSHOT=1"]
+            "customBuildFlags": [
+              "-DSQLITE_ENABLE_DBSTAT_VTAB=1 -DSQLITE_ENABLE_SNAPSHOT=1"
+            ]
           }
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "246dca19-994e-4715-9af3-f25d86703003"
+      }
+    }
   }
 }

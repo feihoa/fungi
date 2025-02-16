@@ -8,16 +8,15 @@ import * as FileSystem from 'expo-file-system';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '@/navigation/navigation.types';
 import { useSQLiteContext } from 'expo-sqlite';
-import * as tf from '@tensorflow/tfjs';
-import { decodeJpeg } from '@tensorflow/tfjs-react-native';
 import { manipulateAsync, SaveFormat } from 'expo-image-manipulator';
 import CameraOverlay from '@/components/shared/CameraOverlay';
 import SearchButton from '@/components/shared/SearchButton';
 import { Prediction } from '../types';
 import CameraHandler from './components/CameraHandler';
+import { TensorflowModel } from 'react-native-fast-tflite';
 
 type CameraScreenProps = NativeStackScreenProps<RootStackParamList, 'Recognizer'> & {
-  model: any;
+  model: TensorflowModel;
 };
 
 const Recognizer: React.FC<CameraScreenProps> = ({ navigation, model }) => {
@@ -62,10 +61,19 @@ const Recognizer: React.FC<CameraScreenProps> = ({ navigation, model }) => {
     }
   };
 
-  const makePredictions = async (img: any) => {
+  const makePredictions = async (inputData: Uint8Array) => {
     try {
-      const predictions = model.predict(img);
-      return predictions;
+      const inputTensor = new Uint8Array(300 * 300 * 3);
+      inputTensor.set(inputData);
+
+      const outputs = await model.run([inputTensor]);
+
+      const outputData = outputs[0];
+      const probabilities = Array.from(outputData).map(q => {
+        const value = typeof q === 'bigint' ? Number(q) : q;
+        return (value as number) * 0.00390625;
+      });
+      return probabilities;
     } catch (error) {
       console.error('Ошибка при предсказании:', error);
       throw error;
@@ -73,23 +81,21 @@ const Recognizer: React.FC<CameraScreenProps> = ({ navigation, model }) => {
   };
 
   const getPredictions = async (uri: string) => {
-    const resizedImage = await manipulateAsync(uri, [{ resize: { width: 224, height: 224 } }], {
-      compress: 0.7,
-      format: SaveFormat.JPEG,
-    });
+    console.log(uri);
+
+    const resizedImage = await manipulateAsync(
+      uri,
+      [{ resize: { width: 300, height: 300 } }],
+      { compress: 1, format: SaveFormat.JPEG }
+    );
 
     const img64 = await FileSystem.readAsStringAsync(resizedImage.uri, {
       encoding: FileSystem.EncodingType.Base64,
     });
+    const raw = Uint8Array.from(atob(img64), c => c.charCodeAt(0));
+    const rgbData = raw.slice(0, 300 * 300 * 3);
 
-    const imgBuffer = tf.util.encodeString(img64, 'base64').buffer;
-    const raw = new Uint8Array(imgBuffer);
-    let imgTensor = decodeJpeg(raw);
-    const scalar = tf.scalar(255);
-    const tensorScaled = imgTensor.div(scalar);
-    const img = tf.reshape(tensorScaled, [1, 224, 224, 3]);
-
-    return await makePredictions(img);
+    return await makePredictions(rgbData);
   };
 
   const handleSave = async (uri: string) => {
@@ -97,13 +103,13 @@ const Recognizer: React.FC<CameraScreenProps> = ({ navigation, model }) => {
     try {
       const savedImageUri = await saveImageToAppFolder(uri);
       if (savedImageUri) {
-        const tensor = await getPredictions(savedImageUri);
-        const predictionsAll: number[][] = await tensor.arraySync();
-        const probabilities = predictionsAll[0];
+        console.log(savedImageUri)
 
+        const probabilities = await getPredictions(savedImageUri);
+console.log(probabilities)
         const predictions: Prediction[] = probabilities.map((probability, id) => ({
           id,
-          probability: +(probability * 100).toFixed(),
+          probability,
         }));
 
         let topPredictions = predictions
@@ -140,7 +146,7 @@ const Recognizer: React.FC<CameraScreenProps> = ({ navigation, model }) => {
 
   const takePicture = async () => {
     if (cameraRef.current) {
-      const photo = await (cameraRef.current as any).takePictureAsync({
+      const photo = await cameraRef.current.takePictureAsync({
         quality: 1,
         skipProcessing: false,
         mute: true,

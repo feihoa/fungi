@@ -123,7 +123,7 @@ describe('MushroomHistory', () => {
 
     expect(Alert.alert).toHaveBeenCalledWith(
       'Удалить запись',
-      'Вы уверены, что хотите удалить эту запись?',
+      'Вы уверены, что хотите удалить это изображение?',
       expect.any(Array),
       { cancelable: true }
     );

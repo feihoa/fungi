@@ -32,7 +32,7 @@ export default function App() {
   useEffect(() => {
     const loadModel = async () => {
       try {
-        const modelUri = './assets/models/fungs/fungi.tflite';
+        const modelUri = './assets/models/fungs/fungs.tflite';
         const model = await loadTensorflowModel(require(modelUri))
         setModel(model);
 
